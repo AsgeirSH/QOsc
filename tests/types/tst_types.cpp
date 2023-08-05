@@ -113,7 +113,7 @@ void types::test_timetag()
 {
     QOscValue test(QDateTime(QDate(1900, 1, 1), QTime(0, 0)));
     QCOMPARE(test.type(), QOsc::TimeTagType);
-    QCOMPARE(test.toDateTime(), QDateTime(QDate(1900, 1, 1), QTime(0, 0)));
+    QCOMPARE(test.toDateTime(), QDateTime(QDate(1900, 1, 1), QTime(0, 0), Qt::UTC));
 
     QVERIFY(QOscValue::asap().isNow());
 
