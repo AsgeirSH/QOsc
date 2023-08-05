@@ -21,6 +21,7 @@ private slots:
     void test_receive();
     void test_receive_wildcard();
     void test_receive_integer_wildcard();
+    void test_receive_multiple_integer_wildcard();
     void test_connect_dispatch();
     void test_time_bundle();
 
@@ -173,6 +174,27 @@ void interface::test_receive_integer_wildcard()
     send(msg.package());
 
     QVERIFY(QTest::qWaitFor([&](){ return testResult; }));
+
+    test.disconnect();
+}
+
+void interface::test_receive_multiple_integer_wildcard()
+{
+    bool testResultA = false;
+
+    test.connect("/a/[0-9]*/c",
+    [&](const QOscMessage& m)
+    {
+        QCOMPARE(m.pattern(), "/a/11/c");
+        QCOMPARE(m.toInt(), 10);
+        testResultA = true;
+    });
+
+    auto msg = magicMessage();
+    msg.setPattern("/a/11/c");
+    send(msg.package());
+
+    QVERIFY(QTest::qWaitFor([&](){ return testResultA; }));
 
     test.disconnect();
 }

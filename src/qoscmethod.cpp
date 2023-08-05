@@ -29,7 +29,9 @@ void QOscMethod::compilePattern() {
     copy.replace('.', "\\.");
     copy.replace('(', "\\(");
     copy.replace(')', "\\)");
+    copy.replace("]*", "]#"); // Temporarily subsitute the repeater - this allows patterns that look for multiple characters in a capture group
     copy.replace('*', "[^\\s]*");
+    copy.replace("]#", "]*"); // Then replace the repeater
     copy.replace("[!", "[^");
     copy.replace('?',  '.');
 
