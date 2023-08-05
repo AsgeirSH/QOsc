@@ -142,9 +142,19 @@ void QOscInterfacePrivate::readReady()
 void QOscInterfacePrivate::processMessage(const QOscMessage& msg)
 {
     for(auto& m : methods)
-    {
-        if(msg.match(m->addr))
+    {   
+        if(msg.match(m->addr)) {
             m->call(msg);
+            // Check next method for more matches
+            continue;
+        }
+        
+        // Reverse match (aka wildcards in method path) if it wasn't a normal match
+        if(m->match(msg.pattern())) {
+            m->call(msg);
+            continue;
+        }
+
     }
 }
 

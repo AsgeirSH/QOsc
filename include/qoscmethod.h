@@ -8,12 +8,17 @@ class QOSC_EXPORT QOscMethod
 public:
     typedef QSharedPointer<QOscMethod> ptr;
 
-    QOscMethod(const QString& addr) : addr(addr) {};
+    QOscMethod(const QString& addr);
     virtual ~QOscMethod() {};
 
     virtual void call(const QOscMessage& msg) = 0;
-
+    bool match(QString pattern);
+    void compilePattern();
     const QString addr;
+
+private:
+    QString pattern;
+    QRegularExpression matcher;
 };
 
 class QOSC_EXPORT QOscSlotMethod : public QOscMethod

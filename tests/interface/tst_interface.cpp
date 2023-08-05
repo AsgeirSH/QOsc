@@ -19,6 +19,7 @@ private slots:
 
     void test_send();
     void test_receive();
+    void test_receive_wildcard();
     void test_connect_dispatch();
     void test_time_bundle();
 
@@ -133,6 +134,27 @@ void interface::test_receive()
         }
     }
 }
+
+void interface::test_receive_wildcard()
+{
+    bool abc = false;
+
+    test.connect("/a/*",
+    [&](const QOscMessage& m)
+    {
+        QCOMPARE(m.pattern(), "/a/b/c");
+        QCOMPARE(m.toInt(), 10);
+        abc = true;
+    });
+
+    auto msg = magicMessage();
+    send(msg.package());
+
+    QVERIFY(QTest::qWaitFor([&](){ return abc; }));
+
+    test.disconnect();
+}
+
 
 void interface::test_connect_dispatch()
 {
